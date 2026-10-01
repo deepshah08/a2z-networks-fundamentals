@@ -1,0 +1,10 @@
+{
+  "name": "a2z-networks-fundamentals",
+  "version": "1.0.0",
+  "description": "Computer Networks, Packet by Packet — An interactive visual field guide",
+  "scripts": {
+    "test": "node tests/audit-all-widgets.js"
+  },
+  "author": "Deep Shah",
+  "license": "MIT"
+}

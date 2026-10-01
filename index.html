@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Computer Networks, Packet by Packet — An Interactive Visual Field Guide</title>
+  <meta name="description" content="An interactive, visual field guide to computer networking fundamentals: from packets, DNS, and HTTP/3 QUIC to TCP congestion control, BGP routing, and eBPF XDP.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-head">
+  <div class="brand">
+    <span class="badge">CURRICULUM</span>
+    <span class="title">Computer Networks, Packet by Packet</span>
+  </div>
+  <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle theme">◐ Theme</button>
+</header>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="eyebrow">Interactive Systems Field Guide</p>
+    <h1>Computer Networks, Packet by Packet</h1>
+    <p class="lede">Synthesizing Kurose &amp; Ross, Stevens, and Peterson &amp; Davie into an interactive, visual field guide. From the physical physics of optical fiber to TCP congestion dynamics, BGP Internet routing, and modern eBPF line-rate kernels.</p>
+    <p class="hero-hint">↓ Scroll through the curriculum or interact with the live TCP Congestion simulator.</p>
+  </div>
+  <figure class="viz viz-hero" data-viz="tcpHero">
+    <figcaption>Interactive TCP Congestion Arena: Compare classic Reno (AIMD saw-tooth) against Linux default Cubic and Google BBR pacing under packet loss.</figcaption>
+  </figure>
+</section>
+
+<div class="layout">
+  <nav class="toc" aria-label="Table of contents">
+    <details class="toc-details" open>
+      <summary>Chapters</summary>
+      <ol class="toc-list">
+        <li class="toc-part">Part I · Application &amp; Transport</li>
+        <li><a href="#layering"><span class="toc-num">01</span><span>Protocol Layering</span></a></li>
+        <li><a href="#dns"><span class="toc-num">02</span><span>DNS Hierarchy</span></a></li>
+        <li><a href="#http3-quic"><span class="toc-num">03</span><span>HTTP/3 &amp; QUIC</span></a></li>
+        <li><a href="#tls"><span class="toc-num">04</span><span>TLS 1.3 Handshake</span></a></li>
+        <li><a href="#sockets"><span class="toc-num">05</span><span>Sockets &amp; Demux</span></a></li>
+        <li><a href="#udp-vs-tcp"><span class="toc-num">06</span><span>UDP vs. TCP</span></a></li>
+        <li><a href="#sliding-window"><span class="toc-num">07</span><span>Sliding Window (rdt)</span></a></li>
+
+        <li class="toc-part">Part II · TCP &amp; Congestion Control</li>
+        <li><a href="#tcp-fsm"><span class="toc-num">08</span><span>TCP 3-Way Handshake</span></a></li>
+        <li><a href="#flow-control"><span class="toc-num">09</span><span>Flow Control (rwnd)</span></a></li>
+        <li><a href="#rtt-rto"><span class="toc-num">10</span><span>RTT &amp; RTO Estimation</span></a></li>
+        <li><a href="#congestion-control"><span class="toc-num">11</span><span>Congestion Control</span></a></li>
+        <li><a href="#bufferbloat-bbr"><span class="toc-num">12</span><span>Bufferbloat &amp; BBR</span></a></li>
+        <li><a href="#syn-cookies"><span class="toc-num">13</span><span>SYN Floods &amp; Cookies</span></a></li>
+
+        <li class="toc-part">Part III · Network Layer &amp; Routing</li>
+        <li><a href="#cidr"><span class="toc-num">14</span><span>IPv4 &amp; CIDR</span></a></li>
+        <li><a href="#nat"><span class="toc-num">15</span><span>NAT &amp; Port Forwarding</span></a></li>
+        <li><a href="#ipv6"><span class="toc-num">16</span><span>IPv6 &amp; SLAAC</span></a></li>
+        <li><a href="#router-crossbar"><span class="toc-num">17</span><span>Router Data Plane</span></a></li>
+        <li><a href="#radix-lpm"><span class="toc-num">18</span><span>Longest Prefix Match</span></a></li>
+        <li><a href="#dijkstra-ospf"><span class="toc-num">19</span><span>OSPF &amp; Dijkstra</span></a></li>
+        <li><a href="#distance-vector"><span class="toc-num">20</span><span>Distance-Vector &amp; RIP</span></a></li>
+        <li><a href="#bgp"><span class="toc-num">21</span><span>BGP Internet Routing</span></a></li>
+
+        <li class="toc-part">Part IV · Link Layer &amp; Systems</li>
+        <li><a href="#arp"><span class="toc-num">22</span><span>Framing, MAC &amp; ARP</span></a></li>
+        <li><a href="#stp"><span class="toc-num">23</span><span>Ethernet &amp; STP</span></a></li>
+        <li><a href="#wifi-csma"><span class="toc-num">24</span><span>Wi-Fi &amp; CSMA/CA</span></a></li>
+        <li><a href="#crc"><span class="toc-num">25</span><span>Error Detection &amp; CRC</span></a></li>
+        <li><a href="#ebpf-xdp"><span class="toc-num">26</span><span>eBPF XDP Line Rate</span></a></li>
+        <li><a href="#openflow-sdn"><span class="toc-num">27</span><span>SDN &amp; OpenFlow</span></a></li>
+        <li><a href="#network-latency"><span class="toc-num">28</span><span>Latency Numbers</span></a></li>
+      </ol>
+    </details>
+  </nav>
+
+  <main>
+
+<!-- ============================ PART I ============================ -->
+<div class="part-head" id="part-1">
+  <span>Part I</span>
+  <h2 class="part-title">Application Layer &amp; Transport Primitives</h2>
+  <p>The network edge, client-server abstractions, naming systems, security handshakes, and transport layer multiplexing.</p>
+</div>
+
+<section id="layering" class="chapter">
+  <p class="ch-num">01</p>
+  <h2>Protocol Layering &amp; Encapsulation</h2>
+  <p>The global Internet functions via modular abstractions. Rather than building a single monolithic system, protocols are organized into a 5-layer stack:</p>
+  <figure class="viz" data-viz="headerDissector">
+    <figcaption>Protocol Header Dissector: Click layer badges to peel back the encapsulation onion, from Ethernet Frame down to HTTP payload.</figcaption>
+  </figure>
+  <dl class="defs">
+    <dt>Application Layer (L5)</dt><dd>Generates messages (HTTP, DNS, SSH, TLS). Payload Unit: <b>Message</b>.</dd>
+    <dt>Transport Layer (L4)</dt><dd>Provides process-to-process communication, port addressing, and reliability (TCP, UDP, QUIC). Payload Unit: <b>Segment</b>.</dd>
+    <dt>Network Layer (L3)</dt><dd>Routes datagrams across autonomous systems via logical IP addressing (IPv4, IPv6, BGP, OSPF). Payload Unit: <b>Packet / Datagram</b>.</dd>
+    <dt>Data Link Layer (L2)</dt><dd>Transfers frames between adjacent nodes on the same physical link (Ethernet, Wi-Fi 802.11). Payload Unit: <b>Frame</b>.</dd>
+    <dt>Physical Layer (L1)</dt><dd>Transmits raw binary bits across physical media (Copper twisted pair, Fiber optics, RF radio). Payload Unit: <b>Bits</b>.</dd>
+  </dl>
+</section>
+
+<section id="dns" class="chapter">
+  <p class="ch-num">02</p>
+  <h2>DNS: The Internet's Distributed Phonebook</h2>
+  <p>Humans memorize domain names (<code>github.com</code>); routers understand 32-bit or 128-bit IP addresses. The <b>Domain Name System (DNS)</b> is a hierarchical, distributed database that translates human names into machine routable addresses.</p>
+  <figure class="viz" data-viz="dnsResolver">
+    <figcaption>DNS Resolution Stepper: Trace how your local recursive resolver queries Root (.), TLD (.com), and Authoritative nameservers iteratively.</figcaption>
+  </figure>
+  <div class="callout note">
+    <p class="callout-label">DNS over HTTPS (DoH) &amp; DoT</p>
+    <p>Traditional DNS queries travel over plaintext UDP port 53, allowing ISPs and surveillance middleboxes to eavesdrop on every site you visit. Modern DNS over HTTPS (DoH, RFC 8484) encrypts queries inside TLS 1.3 sessions over port 443.</p>
+  </div>
+</section>
+
+<section id="http3-quic" class="chapter">
+  <p class="ch-num">03</p>
+  <h2>HTTP Evolution: HTTP/1.1 to HTTP/3 (QUIC)</h2>
+  <p>HTTP has undergone three architectural revolutions. While HTTP/1.1 was limited to serial FIFO requests and HTTP/2 multiplexed streams over a single TCP socket, both suffered from <b>Head-of-Line (HOL) blocking</b>:</p>
+  <figure class="viz" data-viz="holBlocking">
+    <figcaption>Head-of-Line Blocking Arena: Inject packet loss to compare how HTTP/2 stalls all streams while HTTP/3 QUIC isolates packet loss to a single stream.</figcaption>
+  </figure>
+  <ul class="bullets">
+    <li><b>HTTP/1.1 Pipelining:</b> A slow request at the head of the queue blocks all following responses. Browsers worked around this by opening 6 parallel TCP connections per domain.</li>
+    <li><b>HTTP/2 TCP HOL Blocking:</b> Solved application-layer blocking by framing requests into binary streams over 1 TCP socket. However, if <i>one</i> packet is dropped on the wire, the kernel pauses <i>all</i> streams until TCP retransmits it.</li>
+    <li><b>HTTP/3 QUIC over UDP:</b> Replaces TCP entirely with QUIC in userspace over UDP. Each stream has independent flow control; losing a packet on Stream 1 has zero impact on Streams 2 and 3!</li>
+  </ul>
+</section>
+
+<section id="tls" class="chapter">
+  <p class="ch-num">04</p>
+  <h2>TLS 1.3: Cryptographic Handshake &amp; 0-RTT</h2>
+  <p>Transport Layer Security (TLS) secures the public web against eavesdropping and tampering. TLS 1.3 radically simplified cryptography by deprecating insecure algorithms (MD5, SHA-1, RC4, RSA key exchange) in favor of ephemeral Diffie-Hellman (ECDHE).</p>
+  <figure class="viz" data-viz="tlsHandshake">
+    <figcaption>TLS 1.3 1-RTT Handshake: Client sends DH key shares in the very first flight, establishing authenticated encryption in a single round-trip.</figcaption>
+  </figure>
+  <div class="formula">TLS 1.2 Handshake = 2 RTTs (TCP + 2 TLS flights)
+TLS 1.3 Handshake = 1 RTT (ClientHello sends ECDHE key_share immediately)</div>
+</section>
+
+<section id="sockets" class="chapter">
+  <p class="ch-num">05</p>
+  <h2>Sockets &amp; Transport Demultiplexing</h2>
+  <p>Operating systems multiplex thousands of network connections onto a single network interface card (NIC). The kernel routes incoming packets using the <b>Socket 4-Tuple</b>:</p>
+  <figure class="viz" data-viz="socketDemux">
+    <figcaption>Socket Demultiplexer: Observe how incoming packets targeting port 443 are routed to private client socket buffers via their 4-tuple key.</figcaption>
+  </figure>
+  <div class="formula">Socket 4-Tuple = (Source IP, Source Port, Destination IP, Destination Port)</div>
+</section>
+
+<section id="udp-vs-tcp" class="chapter">
+  <p class="ch-num">06</p>
+  <h2>UDP vs. TCP: The Fundamental Trade-off</h2>
+  <p>The transport layer offers two primary paradigms: connectionless datagrams (UDP) or reliable in-order byte streams (TCP):</p>
+  <figure class="viz" data-viz="udpVsTcp">
+    <figcaption>Protocol Header Inspector: Compare the barebones 8-byte UDP header against the complex 20-byte TCP stateful header.</figcaption>
+  </figure>
+  <dl class="defs">
+    <dt>User Datagram Protocol (UDP)</dt><dd>No connection setup, no retransmissions, no congestion control. 8 bytes fixed header. Packets may arrive out-of-order, duplicated, or not at all. Ideal for real-time voice, video, DNS, and QUIC.</dd>
+    <dt>Transmission Control Protocol (TCP)</dt><dd>Full-duplex, point-to-point, reliable byte stream. Tracks sequence numbers, acknowledgments, dynamic sliding windows, and adapts to network congestion.</dd>
+  </dl>
+</section>
+
+<section id="sliding-window" class="chapter">
+  <p class="ch-num">07</p>
+  <h2>Reliable Data Transfer (rdt) &amp; Sliding Window</h2>
+  <p>How do we build reliable communication over an unreliable physical channel? Stop-and-Wait protocols are inefficient because they waste bandwidth waiting for acknowledgments. High-performance protocols use a <b>Sliding Window</b>:</p>
+  <figure class="viz" data-viz="slidingWindow">
+    <figcaption>Sliding Window Protocol: Toggle Go-Back-N (retransmit all N unacked packets) vs Selective Repeat (retransmit only the lost packet).</figcaption>
+  </figure>
+  <div class="callout analogy">
+    <p class="callout-label">Analogy</p>
+    <p>Stop-and-Wait is sending a single letter and waiting for a reply by mail before writing the next. A sliding window is mailing 10 numbered letters at once, advancing your sending clipboard every time a reply arrives.</p>
+  </div>
+</section>
+
+<!-- ============================ PART II ============================ -->
+<div class="part-head" id="part-2">
+  <span>Part II</span>
+  <h2 class="part-title">TCP &amp; Congestion Control</h2>
+  <p>Connection lifecycles, flow control buffers, round-trip estimation, network collapse prevention, and modern BBR pacing.</p>
+</div>
+
+<section id="tcp-fsm" class="chapter">
+  <p class="ch-num">08</p>
+  <h2>TCP Connection Lifecycle: The 3-Way Handshake</h2>
+  <p>Before exchanging bytes, TCP synchronizes Initial Sequence Numbers (ISNs) using a 3-way handshake, and gracefully tears down using a 4-way exchange:</p>
+  <figure class="viz" data-viz="tcpFsm">
+    <figcaption>TCP State Machine Stepper: Walk through SYN, SYN-ACK, ESTABLISHED, and the crucial TIME_WAIT state (2*MSL).</figcaption>
+  </figure>
+  <ol class="steps">
+    <li><b>SYN:</b> Client chooses random <code>ISN_c</code> and sends <code>[SYN, Seq=ISN_c]</code>. Enters <code>SYN_SENT</code>.</li>
+    <li><b>SYN-ACK:</b> Server chooses <code>ISN_s</code> and replies <code>[SYN+ACK, Seq=ISN_s, Ack=ISN_c + 1]</code>. Enters <code>SYN_RCVD</code>.</li>
+    <li><b>ACK:</b> Client acknowledges server ISN <code>[ACK, Ack=ISN_s + 1]</code>. Both enter <code>ESTABLISHED</code>.</li>
+  </ol>
+</section>
+
+<section id="flow-control" class="chapter">
+  <p class="ch-num">09</p>
+  <h2>TCP Flow Control: The Receive Window (rwnd)</h2>
+  <p>Flow control prevents a high-speed sender from overwhelming a slow receiver's socket buffer. The receiver advertises its available buffer space in the <b>Window</b> field of every TCP header:</p>
+  <figure class="viz" data-viz="flowControl">
+    <figcaption>Receive Window Simulator: Transmit bytes to observe the buffer fill up. When rwnd reaches 0, the sender pauses until the application drains memory.</figcaption>
+  </figure>
+  <div class="formula">Available Receive Window: rwnd = RcvBuffer − [LastByteRcvd − LastByteRead]
+Sender Constraint: LastByteSent − LastByteAcked ≤ rwnd</div>
+</section>
+
+<section id="rtt-rto" class="chapter">
+  <p class="ch-num">10</p>
+  <h2>RTT Estimation &amp; Retransmission Timeout (RTO)</h2>
+  <p>How long should TCP wait before declaring a packet lost? Setting RTO too low triggers bogus retransmissions; setting RTO too high causes long recovery stalls. TCP uses <b>Jacobson's Algorithm</b> (RFC 6298) with Exponentially Weighted Moving Averages (EWMA):</p>
+  <figure class="viz" data-viz="rttEstimator">
+    <figcaption>Jacobson RTT Estimator: Trigger latency spikes and observe how EWMA smoothed RTT and variance dynamically compute the Retransmission Timeout.</figcaption>
+  </figure>
+  <div class="formula">SRTT = (1 − α) · SRTT + α · SampleRTT       (α = 0.125)
+RTTVAR = (1 − β) · RTTVAR + β · |SRTT − SampleRTT| (β = 0.25)
+RTO = SRTT + 4 · RTTVAR</div>
+</section>
+
+<section id="congestion-control" class="chapter">
+  <p class="ch-num">11</p>
+  <h2>TCP Congestion Control: Reno &amp; Cubic</h2>
+  <p>While flow control protects the receiver, <b>congestion control</b> protects the intermediate network from collapse. TCP probes for available capacity by dynamically adjusting its Congestion Window (<code>cwnd</code>):</p>
+  <div class="formula">Effective Transmission Window = min(cwnd, rwnd)</div>
+  <p>Classic TCP Reno uses <b>Additive Increase, Multiplicative Decrease (AIMD)</b>: increase <code>cwnd</code> by 1 MSS per RTT, and halve it on packet loss. Modern Linux default <b>TCP CUBIC</b> uses a cubic polynomial curve to scale rapidly over high-bandwidth links.</p>
+</section>
+
+<section id="bufferbloat-bbr" class="chapter">
+  <p class="ch-num">12</p>
+  <h2>Bufferbloat &amp; Google BBR</h2>
+  <p>Cheap memory in consumer routers led to <b>bufferbloat</b>: routers buffer gigabytes of packets rather than dropping them. Loss-based algorithms (Reno, Cubic) fill these buffers completely, spiking network latency from 20ms to 2,000ms:</p>
+  <figure class="viz" data-viz="bufferbloat">
+    <figcaption>Bufferbloat &amp; BBR Pacing: Observe how loss-based Cubic blows out router queues, while Google BBR paces packet delivery to keep the queue nearly empty.</figcaption>
+  </figure>
+  <div class="callout note">
+    <p class="callout-label">Google BBR (Bottleneck Bandwidth and RTT)</p>
+    <p>BBR does not treat packet loss as a congestion indicator. Instead, it measures maximum delivery rate (<code>BtlBw</code>) and minimum round-trip time (<code>RTprop</code>) simultaneously, maintaining maximum throughput while preventing queue buildup.</p>
+  </div>
+</section>
+
+<section id="syn-cookies" class="chapter">
+  <p class="ch-num">13</p>
+  <h2>SYN Flood Attacks &amp; SYN Cookies</h2>
+  <p>In a <b>SYN Flood DDoS attack</b>, an attacker floods a server with thousands of TCP SYN packets with forged IP addresses and never replies to the SYN-ACK. The server's <code>backlog</code> queue fills up, exhausting kernel memory:</p>
+  <figure class="viz" data-viz="synCookie">
+    <figcaption>SYN Flood &amp; Cookie Defense: Watch half-open connection tables exhaust during an attack, and see how stateless SYN cookies bypass table allocation.</figcaption>
+  </figure>
+  <div class="formula">SYN Cookie ISN = HMAC-SHA1(Client_IP, Client_Port, Timestamp, Secret_Key)</div>
+</section>
+
+<!-- ============================ PART III ============================ -->
+<div class="part-head" id="part-3">
+  <span>Part III</span>
+  <h2 class="part-title">The Network Layer &amp; Routing</h2>
+  <p>IP addressing, subnetting, NAT translation, IPv6, router data planes, and autonomous system routing protocols.</p>
+</div>
+
+<section id="cidr" class="chapter">
+  <p class="ch-num">14</p>
+  <h2>IPv4 Addressing, Subnetting &amp; CIDR</h2>
+  <p>An IPv4 address is a 32-bit integer divided into two components: the <b>Network Prefix</b> and the <b>Host Number</b>. Classless Inter-Domain Routing (CIDR, RFC 1519) eliminated rigid Class A/B/C allocations in favor of flexible prefix lengths:</p>
+  <figure class="viz" data-viz="cidrCalc">
+    <figcaption>Interactive CIDR Calculator: Adjust prefix length slider to visualize the boundary between network bits and host bits.</figcaption>
+  </figure>
+  <div class="formula">Total Host Addresses = 2^(32 − Prefix_Length)
+Usable Host Addresses = 2^(32 − Prefix_Length) − 2 (Excludes Network &amp; Broadcast)</div>
+</section>
+
+<section id="nat" class="chapter">
+  <p class="ch-num">15</p>
+  <h2>Network Address Translation (NAT)</h2>
+  <p>To survive IPv4 exhaustion, home and enterprise routers use <b>Network Address Port Translation (NAPT)</b>. Multiple devices share a single public WAN IP by mapping private RFC 1918 addresses to unique ephemeral source ports:</p>
+  <figure class="viz" data-viz="natTranslator">
+    <figcaption>NAT State Table: Trace outbound connections from private LAN hosts and watch the router rewrite IP and port combinations.</figcaption>
+  </figure>
+  <ul class="bullets">
+    <li><code>10.0.0.0/8</code> (10.0.0.0 to 10.255.255.255) — Large enterprise networks</li>
+    <li><code>172.16.0.0/12</code> (172.16.0.0 to 172.31.255.255) — Medium networks, Docker default</li>
+    <li><code>192.168.0.0/16</code> (192.168.0.0 to 192.168.255.255) — Home routers and LANs</li>
+  </ul>
+</section>
+
+<section id="ipv6" class="chapter">
+  <p class="ch-num">16</p>
+  <h2>IPv6: The Next-Generation Internet</h2>
+  <p>IPv6 expands the address space from 32 bits to <b>128 bits</b> (3.4 × 10^38 addresses). It eliminates the need for NAT, streamlines routing headers, and introduces Stateless Address Autoconfiguration (SLAAC):</p>
+  <figure class="viz" data-viz="ipv6Slaac">
+    <figcaption>IPv6 Formatter &amp; SLAAC: Toggle RFC 5952 zero compression and observe link-local address generation from 48-bit MAC addresses.</figcaption>
+  </figure>
+</section>
+
+<section id="router-crossbar" class="chapter">
+  <p class="ch-num">17</p>
+  <h2>Inside a Router: Data Plane &amp; Switching Fabrics</h2>
+  <p>Core Internet routers forward millions of packets per second at line rate. They decouple the slow software <b>Control Plane</b> from the ultra-fast hardware <b>Data Plane</b> using non-blocking crossbar fabrics:</p>
+  <figure class="viz" data-viz="routerCrossbar">
+    <figcaption>Router Crossbar Fabric: Shift active crosspoints to observe how multiple input ports stream to output ports in parallel without bus memory contention.</figcaption>
+  </figure>
+</section>
+
+<section id="radix-lpm" class="chapter">
+  <p class="ch-num">18</p>
+  <h2>Longest Prefix Match (LPM) &amp; Radix Trees</h2>
+  <p>When a router receives a packet, its destination IP may match multiple entries in the forwarding table. The router always picks the <b>Longest Prefix Match (LPM)</b>:</p>
+  <figure class="viz" data-viz="radixTrie">
+    <figcaption>Longest Prefix Match: Click destination IPs to see the router select the most specific matching CIDR prefix.</figcaption>
+  </figure>
+</section>
+
+<section id="dijkstra-ospf" class="chapter">
+  <p class="ch-num">19</p>
+  <h2>Intra-Domain Routing: OSPF &amp; Dijkstra's Algorithm</h2>
+  <p>Within a single autonomous system, routers use <b>Link-State protocols (OSPF, IS-IS)</b>. Every router floods link-state advertisements (LSAs), giving all nodes an identical network graph, and computes the shortest path tree using Dijkstra's algorithm:</p>
+  <figure class="viz" data-viz="dijkstraOspf">
+    <figcaption>Dijkstra SPF Algorithm: Step through link-state graph relaxation to build the shortest-path forwarding tree.</figcaption>
+  </figure>
+</section>
+
+<section id="distance-vector" class="chapter">
+  <p class="ch-num">20</p>
+  <h2>Distance-Vector Routing: Bellman-Ford &amp; RIP</h2>
+  <p>In <b>Distance-Vector routing (RIP)</b>, routers do not maintain a global map. Instead, each node shares its distance estimates with immediate neighbors using the Bellman-Ford equation. When links break, nodes risk <b>Count-to-Infinity</b> loops:</p>
+  <figure class="viz" data-viz="distanceVector">
+    <figcaption>Count-to-Infinity Simulator: Break a link to observe routing loops and see why distance-vector protocols cap infinity at 16 hops.</figcaption>
+  </figure>
+</section>
+
+<section id="bgp" class="chapter">
+  <p class="ch-num">21</p>
+  <h2>Inter-Domain Routing: BGP (Border Gateway Protocol)</h2>
+  <p>The global Internet is glued together by <b>BGP-4</b>, a path-vector protocol connecting over 75,000 Autonomous Systems (AS). BGP routes based on business peering policies rather than link performance:</p>
+  <figure class="viz" data-viz="bgpAsPath">
+    <figcaption>BGP AS-Path Vector: Observe how BGP detects and silently drops routes containing their own Autonomous System number to prevent loops.</figcaption>
+  </figure>
+</section>
+
+<!-- ============================ PART IV ============================ -->
+<div class="part-head" id="part-4">
+  <span>Part IV</span>
+  <h2 class="part-title">Link Layer, Physical Reality &amp; Modern Systems</h2>
+  <p>Framing, MAC hardware, spanning trees, wireless arbitration, error detection, eBPF XDP, and global speed-of-light latency.</p>
+</div>
+
+<section id="arp" class="chapter">
+  <p class="ch-num">22</p>
+  <h2>The Link Layer: Framing, MAC Addresses &amp; ARP</h2>
+  <p>While IP packets route globally across the Internet, frames only travel between adjacent network cards (NICs) on the same local physical link using 48-bit <b>MAC addresses</b>. The <b>Address Resolution Protocol (ARP)</b> bridges the two layers:</p>
+  <figure class="viz" data-viz="arpStepper">
+    <figcaption>ARP Resolution Stepper: Step through broadcast ARP discovery (FF:FF:FF:FF:FF:FF) and unicast hardware MAC replies.</figcaption>
+  </figure>
+</section>
+
+<section id="stp" class="chapter">
+  <p class="ch-num">23</p>
+  <h2>Ethernet Switching &amp; The Spanning Tree Protocol (STP)</h2>
+  <p>Ethernet switches learn host locations by inspecting source MAC addresses on incoming frames. However, redundant physical links create loops that trigger catastrophic <b>Broadcast Storms</b>. The 802.1D Spanning Tree Protocol eliminates cycles logically:</p>
+  <figure class="viz" data-viz="spanningTree">
+    <figcaption>Spanning Tree Protocol: Toggle STP to see redundant switch links placed in BLOCKING mode to eliminate broadcast loops.</figcaption>
+  </figure>
+</section>
+
+<section id="wifi-csma" class="chapter">
+  <p class="ch-num">24</p>
+  <h2>Wireless Networking: Wi-Fi &amp; CSMA/CA</h2>
+  <p>Wireless networks communicate over shared radio frequency spectrum. Because radio cards cannot listen while transmitting, Ethernet collision detection (CSMA/CD) is impossible. Wi-Fi uses <b>CSMA/CA (Collision Avoidance)</b> with RTS/CTS handshakes:</p>
+  <figure class="viz" data-viz="csmaCa">
+    <figcaption>Wi-Fi Hidden Terminal &amp; RTS/CTS: Observe how Node A and Node C collide without RTS/CTS because they are out of range of each other.</figcaption>
+  </figure>
+</section>
+
+<section id="crc" class="chapter">
+  <p class="ch-num">25</p>
+  <h2>Error Detection &amp; Correction: CRC-32</h2>
+  <p>Physical cables and wireless channels suffer from thermal noise, signal attenuation, and electromagnetic interference. Ethernet frames detect bit corruption using <b>Cyclic Redundancy Checks (CRC-32)</b> via modulo-2 polynomial division:</p>
+  <figure class="viz" data-viz="crcDivision">
+    <figcaption>CRC Modulo-2 Division: Step through binary polynomial long division using hardware XOR operations.</figcaption>
+  </figure>
+</section>
+
+<section id="ebpf-xdp" class="chapter">
+  <p class="ch-num">26</p>
+  <h2>High-Performance Packet Processing: eBPF XDP</h2>
+  <p>The traditional Linux kernel networking stack allocates a heavy 240-byte <code>sk_buff</code> struct for every single packet, capping throughput at ~2 million packets per second. <b>eBPF XDP (eXpress Data Path)</b> executes verified bytecode directly in the NIC driver ring buffer:</p>
+  <figure class="viz" data-viz="ebpfXdp">
+    <figcaption>eBPF XDP vs Linux Stack: Compare standard 15-stage kernel sk_buff traversal against line-rate 24 Mpps XDP driver filtering.</figcaption>
+  </figure>
+</section>
+
+<section id="openflow-sdn" class="chapter">
+  <p class="ch-num">27</p>
+  <h2>Software-Defined Networking (SDN) &amp; OpenFlow</h2>
+  <p>SDN separates the centralized <b>Control Plane</b> (software controllers) from the high-speed <b>Data Plane</b>. Switches execute generalized <b>Match-Action Tables</b> specified via the OpenFlow protocol:</p>
+  <figure class="viz" data-viz="openflowSdn">
+    <figcaption>OpenFlow SDN Pipeline: Step packets through multi-stage classifier, firewall ACL, and VLAN forwarding tables.</figcaption>
+  </figure>
+</section>
+
+<section id="network-latency" class="chapter">
+  <p class="ch-num">28</p>
+  <h2>Network Latency Numbers Every Engineer Must Know</h2>
+  <p>Software architectures cannot violate the laws of physics. Light in vacuum travels at $300,000\,\text{km/s}$, but inside silica glass optical fiber ($n \approx 1.5$), signal propagation is strictly limited to <b>~200,000 km/s (5 µs per kilometer)</b>:</p>
+  <figure class="viz" data-viz="fiberLatency">
+    <figcaption>Global Optical Latency Map: Select worldwide routes to compare speed-of-light fiber minimums against real-world Internet RTTs.</figcaption>
+  </figure>
+  <ul class="bullets numbers">
+    <li><b>Datacenter Same-Rack RTT:</b> ~0.1–0.25 milliseconds (100–250 µs).</li>
+    <li><b>Cross-Datacenter Availability Zone (AZ):</b> ~1–2 milliseconds.</li>
+    <li><b>San Francisco to New York:</b> ~41.4 ms physical fiber minimum (real-world: ~70 ms).</li>
+    <li><b>New York to London (Transatlantic):</b> ~55.7 ms physical fiber minimum (real-world: ~78 ms).</li>
+    <li><b>San Francisco to Tokyo (Transpacific):</b> ~82.8 ms physical fiber minimum (real-world: ~115 ms).</li>
+    <li><b>Geostationary Satellite (GEO) RTT:</b> ~500–600 milliseconds (35,786 km orbit each way).</li>
+    <li><b>Low Earth Orbit (Starlink / LEO) RTT:</b> ~25–45 milliseconds (550 km orbit).</li>
+  </ul>
+
+  <h3>Canonical Further Reading</h3>
+  <ul class="reading">
+    <li><a href="https://gaia.cs.umass.edu/kurose_ross/online_lectures.htm" target="_blank" rel="noopener">Computer Networking: A Top-Down Approach (8th Edition)</a> · Jim Kurose &amp; Keith Ross</li>
+    <li><a href="https://book.systemsapproach.org/" target="_blank" rel="noopener">Computer Networks: A Systems Approach</a> · Larry Peterson &amp; Bruce Davie</li>
+    <li><a href="https://www.pearson.com/en-us/subject-catalog/p/computer-networks/P200000003310" target="_blank" rel="noopener">Computer Networks (6th Edition)</a> · Andrew Tanenbaum, Nick Feamster &amp; David Wetherall</li>
+    <li><a href="https://www.kohala.com/start/tcpipiv1.html" target="_blank" rel="noopener">TCP/IP Illustrated, Volume 1: The Protocols</a> · W. Richard Stevens &amp; Kevin Fall</li>
+    <li><a href="https://datatracker.ietf.org/doc/html/rfc9000" target="_blank" rel="noopener">RFC 9000: QUIC: A UDP-Based Multiplexed and Secure Transport</a> · IETF</li>
+    <li><a href="https://datatracker.ietf.org/doc/html/rfc8446" target="_blank" rel="noopener">RFC 8446: The Transport Layer Security (TLS) Protocol Version 1.3</a> · IETF</li>
+    <li><a href="https://queue.acm.org/detail.cfm?id=3022184" target="_blank" rel="noopener">BBR: Congestion-Based Congestion Control</a> · Neal Cardwell et al., Google (ACM Queue 2016)</li>
+  </ul>
+</section>
+
+<footer class="site-foot">
+  <p><b>Computer Networks, Packet by Packet</b> · An interactive visual field guide to computer networking fundamentals. Plain JavaScript in <code>assets/</code>; zero build step required.</p>
+</footer>
+
+  </main>
+</div>
+
+<script src="assets/core.js"></script>
+<script src="assets/viz-app-transport.js"></script>
+<script src="assets/viz-tcp-congestion.js"></script>
+<script src="assets/viz-network-routing.js"></script>
+<script src="assets/viz-link-systems.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    OS.boot();
+  });
+</script>
+</body>
+</html>
