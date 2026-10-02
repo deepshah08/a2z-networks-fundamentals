@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Computer Networks, Packet by Packet — An interactive visual field guide",
   "scripts": {
-    "test": "node tests/audit-all-widgets.js"
+    "test": "node tests/audit-all-widgets.js && python3 tests/e2e-browser-audit.py",
+    "test:unit": "node tests/audit-all-widgets.js",
+    "test:e2e": "python3 tests/e2e-browser-audit.py"
   },
   "author": "Deep Shah",
   "license": "MIT"
