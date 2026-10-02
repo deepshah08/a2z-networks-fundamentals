@@ -38,7 +38,7 @@
       step: 1,
       value: lossRate,
       format: (v) => `${v}%`,
-      onInput: (v) => { lossRate = v; }
+      onInput: (v) => { lossRate = v; render(); }
     });
 
     OS.button(controls, 'Run 10 RTT Steps ▶', () => {
@@ -162,7 +162,7 @@
         // Current status label
         ctx.fillStyle = OS.C.ink;
         ctx.font = OS.font(11, 'mono', 600);
-        ctx.fillText(`Current cwnd: ${Math.round(cwnd)} packets · ssthresh: ${ssthresh} · Policy: ${policy}`, plotX + 15, plotY + 22);
+        ctx.fillText(`Current cwnd: ${Math.round(cwnd)} pkts · ssthresh: ${ssthresh} · Policy: ${policy} · Loss: ${lossRate}%`, plotX + 15, plotY + 22);
       }
     });
 
